@@ -1,12 +1,12 @@
 import { ActionIcon, Group, AppShell, Text } from "@mantine/core";
 import { IconHome, IconUserCircle } from "@tabler/icons-react";
-import { userState, isLoggedInState } from "../State/auth.state";
+import { userAtom, isLoggedInAtom } from "../State/auth.state";
 import { useAtom } from "jotai";
 import { Link } from "react-router-dom";
 
 export function SideBar() {
-  const [isLoggedIn] = useAtom(isLoggedInState);
-  const [user] = useAtom(userState);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
+  const [user] = useAtom(userAtom);
   return (
     <AppShell.Navbar p="md">
       <Group direction="column" spacing="xs" align="center">

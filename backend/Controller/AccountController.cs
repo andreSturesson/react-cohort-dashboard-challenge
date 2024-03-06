@@ -1,5 +1,6 @@
 
 using backend.Model;
+using backend.Utilities.Error;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,10 @@ namespace backend.Controller
     public static void ConfigureAccountController(this WebApplication app)
     {
       app.MapGroup("/accounts");
-      app.MapPost("/registerUser", Register);
-      app.MapPost("/getUser", GetUser);
+      app.MapPost("/user/register", Register);
+      app.MapGet("/user", GetUser);
       app.MapPost("/updateUser", UpdateUser);
+      app.MapGet("/user/{id}", GetUserById);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -45,10 +47,29 @@ namespace backend.Controller
 
       if (result.Succeeded)
       {
-        return Results.Ok("User registered successfully!");
+        return Results.Ok(new Error(Status.Ok, "Created"));
       }
 
       return Results.BadRequest(result.Errors.Select(e => e.Description).ToList());
+    }
+
+
+    [Authorize]
+    public static async Task<IResult> GetUserById([FromServices] UserManager<Account> userManager, int id)
+    {
+      var user = await userManager.FindByIdAsync(id.ToString());
+      if (user == null)
+      {
+        return Results.NotFound(new Error(Status.NotFound, "User not found"));
+      }
+      return Results.Ok(new
+      {
+        user.Id,
+        user.Email,
+        user.FirstName,
+        user.LastName,
+        user.ProfilePicture
+      });
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]

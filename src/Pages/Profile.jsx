@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getContactById } from "../Helpers/APIManager";
+import { getProfile } from "../Helpers/APIManager";
 import { Card, Image, Text, Badge, Table, Button, Space } from "@mantine/core";
-import { isLoggedInState, userState } from "../State/auth.state";
+import { isLoggedInAtom, userAtom } from "../State/auth.state";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 
 export function Profile() {
-  const [isLoggedIn, setLoggedIn] = useAtom(isLoggedInState);
-  const [user, setUser] = useAtom(userState);
+  const [isLoggedIn, setLoggedIn] = useAtom(isLoggedInAtom);
+  const [user, setUser] = useAtom(userAtom);
   const { contactId } = useParams();
   const [contact, setContact] = useState({});
 
@@ -21,7 +21,7 @@ export function Profile() {
   };
 
   useEffect(() => {
-    getContactById(contactId).then((data) => {
+    getProfile(contactId).then((data) => {
       setContact(data);
     });
   }, [contactId]);

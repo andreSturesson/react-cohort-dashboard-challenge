@@ -7,8 +7,8 @@ const fetchData = async () => {
   return data;
 };
 
-export const postState = atomWithRefresh(async (get) => {
+export const postAtom = atomWithRefresh(async (get) => {
   return fetchData();
 });
 
-export const loadablePostState = loadable(postState);
+export const loadablePostAtom = loadable(postAtom);

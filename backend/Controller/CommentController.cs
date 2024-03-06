@@ -17,7 +17,7 @@ namespace backend.Controller
       var comments = app.MapGroup("/comments");
       comments.MapGet("/{commentId}", GetCommentById);
       comments.MapGet("", GetComments);
-      comments.MapPost("", CreateComment);
+      comments.MapPost("/{postId}", CreateComment);
       comments.MapDelete("/{commentId}", DeleteComment);
     }
 
@@ -50,8 +50,9 @@ namespace backend.Controller
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [Authorize]
-    public static async Task<IResult> CreateComment(ICommentRepository repository, int postId, CreateCommentPayload payload, UserManager<Account> userManager)
+    public static async Task<IResult> CreateComment(ICommentRepository repository, int postId, CreateCommentPayload payload)
     {
+      Console.WriteLine("sadsad");
       List<string> errors = new List<string>();
       if (string.IsNullOrEmpty(payload.Text))
       {

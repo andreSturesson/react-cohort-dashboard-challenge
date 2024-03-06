@@ -11,5 +11,6 @@ namespace backend.Repository
     Task<Post> UpdatePost(Post post);
     Task<Post> DeletePost(int id);
     Task<IEnumerable<Post>> GetPosts();
+    Task<IEnumerable<Comment>> GetComments(int postId);
   }
 }

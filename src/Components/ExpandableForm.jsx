@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 import PropTypes from "prop-types";
-import { userState } from "../State/auth.state";
+import { userAtom } from "../State/auth.state";
 import { useAtom } from "jotai";
 
 export function ExpandableForm({
@@ -21,7 +21,7 @@ export function ExpandableForm({
   title,
   setTitle,
 }) {
-  const [user] = useAtom(userState);
+  const [user] = useAtom(userAtom);
 
   return (
     <form onSubmit={handleSubmit}>

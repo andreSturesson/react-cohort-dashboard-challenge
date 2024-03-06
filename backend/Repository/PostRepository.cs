@@ -33,6 +33,15 @@ namespace backend.Repository
       throw new Exception("Post not found");
     }
 
+    public async Task<IEnumerable<Comment>> GetComments(int postId)
+    {
+      var comments = _context.Comments
+                .Include(c => c.Post)
+                .ThenInclude(c => c.Account)
+                .Where(c => c.PostId == postId);
+      return await comments.ToListAsync();
+    }
+
     public async Task<Post> GetPost(int id)
     {
       var post = await _context.Posts.Include(p => p.Account).FirstOrDefaultAsync(p => p.Id == id);

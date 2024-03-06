@@ -1,29 +1,19 @@
 import { Avatar, Group, Text, Card, Space } from "@mantine/core";
 import { CommentList } from "./Comments/CommentList";
-import { getContactById } from "../../Helpers/APIManager";
-import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 export function Post({ post }) {
-  const [contact, setContact] = useState({});
-
-  useEffect(() => {
-    getContactById(post.contactId).then((data) => {
-      setContact(data);
-    });
-  }, []);
-
   return (
     <>
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Group justify="flex-start">
-          <Link to={`/profile/${contact.id}`}>
-            <Avatar src={contact.profileImage} radius="xl" />
+          <Link to={`/profile/${post.account.id}`}>
+            <Avatar src={post.account.profileImage} radius="xl" />
           </Link>
           <div>
-            <Link to={`/profile/${contact.id}`}>
+            <Link to={`/profile/${post.account.id}`}>
               <Text size="sm" fw={700} ta={"left"}>
-                {contact.firstName} {contact.lastName}
+                {post.account.firstName} {post.account.lastName}
               </Text>
             </Link>
             <Text size="xs" c="dimmed">

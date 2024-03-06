@@ -21,7 +21,7 @@ namespace NoteHarbor
                   builder =>
                   {
                     builder
-                          .WithOrigins("http://localhost:5173", "http://localhost:5111") // Add your allowed origins here
+                          .WithOrigins("http://localhost:5173", "http://localhost:5111", "http://localhost:5223/user")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();

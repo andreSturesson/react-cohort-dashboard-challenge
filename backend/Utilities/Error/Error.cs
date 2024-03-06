@@ -9,7 +9,8 @@ namespace backend.Utilities.Error
     Unauthorized = 401,
     Forbidden = 403,
     NotFound = 404,
-    InternalServerError = 500
+    InternalServerError = 500,
+    Ok = 200,
   }
   public class Error
   {

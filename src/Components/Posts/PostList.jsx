@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
-import { loadablePostState } from "../../State/posts.state";
+import { loadablePostAtom } from "../../State/posts.state";
 import { Loader } from "@mantine/core";
 import { Post } from "./Post";
 export function PostList() {
-  const [loadablePosts] = useAtom(loadablePostState);
+  const [loadablePosts] = useAtom(loadablePostAtom);
 
   return (
     <div>

@@ -16,6 +16,7 @@ namespace backend.Controller
     {
       var posts = app.MapGroup("/posts");
       posts.MapGet("/{postId}", GetPostById);
+      posts.MapGet("/{postId}/comments", GetComments);
       posts.MapGet("", GetPosts);
       posts.MapPost("", CreatePost);
       posts.MapPut("/{postId}", UpdatePost);
@@ -33,6 +34,22 @@ namespace backend.Controller
         return Results.NotFound();
       }
       return TypedResults.Ok(new PostDTO(post));
+    }
+
+    [Authorize]
+    public static async Task<IResult> GetComments(IPostRepository repository, int postId)
+    {
+      var post = await repository.GetPost(postId);
+      if (post == null)
+      {
+        return Results.NotFound(new Error(Status.NotFound, "Post not found"));
+      }
+      var comments = await repository.GetComments(postId);
+      if (comments == null)
+      {
+        return Results.NotFound(new Error(Status.NotFound, "Comments not found"));
+      }
+      return TypedResults.Ok(CommentDTO.FromRepository(comments));
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -1,22 +1,14 @@
-import {
-  AppShell,
-  Group,
-  Burger,
-  Image,
-  Button,
-  Avatar,
-  Modal,
-} from "@mantine/core";
+import { AppShell, Group, Burger, Button, Avatar, Modal } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { userState, isLoggedInState } from "../State/auth.state";
+import { userAtom, isLoggedInAtom } from "../State/auth.state";
 import { useAtom } from "jotai";
 import { LoginModal } from "./Login/LoginModal";
 import { IconLogin } from "@tabler/icons-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 export function Header({ opened, toggle }) {
-  const [user] = useAtom(userState);
-  const [isLoggedIn] = useAtom(isLoggedInState);
+  const [user] = useAtom(userAtom);
+  const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [openedModal, { open, close }] = useDisclosure(false);
   return (
     <AppShell.Header style={{ backgroundColor: "#000046" }}>

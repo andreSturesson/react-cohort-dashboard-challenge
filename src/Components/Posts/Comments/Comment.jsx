@@ -8,42 +8,29 @@ import {
   Loader,
 } from "@mantine/core";
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
-import { getContactById } from "../../../Helpers/APIManager";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 export function Comment({ comment }) {
-  const [contact, setContact] = useState({});
-
-  useEffect(() => {
-    const fetchContact = async () => {
-      const data = await getContactById(comment.contactId);
-      setContact(data);
-    };
-
-    fetchContact();
-  }, []);
-  console.log("contact", contact);
-
   return (
     <Container size="sm" ml={0}>
-      {contact ? (
+      {comment.account ? (
         <Group position="left">
-          <Link to={`/profile/${contact.id}`}>
+          <Link to={`/profile/${comment.account.id}`}>
             <Avatar
-              src={contact.profileImage}
-              alt={`${contact.firstName} ${contact.lastName}`}
+              src={comment.account.profileImage}
+              alt={`${comment.account.firstName} ${comment.account.lastName}`}
               radius="xl"
             />
           </Link>
           <div>
             <Card shadow="sm" padding="lg" radius="md" withBorder>
-              <Link to={`/profile/${contact.id}`}>
+              <Link to={`/profile/${comment.account.id}`}>
                 <Text size="xs" fw={700} ta={"left"}>
-                  {contact.firstName} {contact.lastName}
+                  {comment.account.firstName} {comment.account.lastName}
                 </Text>
               </Link>
               <Text size="sm" c="dimmed">
-                {comment.content}
+                {comment.text}
               </Text>
             </Card>
           </div>

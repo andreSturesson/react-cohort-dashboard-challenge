@@ -1,14 +1,14 @@
 import { Avatar, TextInput, ActionIcon, rem } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
-import { userState, isLoggedInState } from "../../../State/auth.state";
+import { userAtom, isLoggedInAtom } from "../../../State/auth.state";
 import { useAtom } from "jotai";
 import { createComment } from "../../../Helpers/APIManager";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
 export function AddComment({ postId, comments, setComments }) {
-  const [user, setUser] = useAtom(userState);
-  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInState);
+  const [user, setUser] = useAtom(userAtom);
+  const [isLoggedIn, setIsLoggedIn] = useAtom(isLoggedInAtom);
   const [commentText, setCommentText] = useState("");
 
   const handleAddComment = async (event) => {
@@ -20,12 +20,11 @@ export function AddComment({ postId, comments, setComments }) {
 
     try {
       const comment = {
-        postId: postId,
-        content: commentText,
-        contactId: user.id,
+        text: commentText,
       };
 
       const data = await createComment(comment, postId);
+      console.log(data);
       setComments(comments.concat(data));
       setCommentText("");
     } catch (error) {
