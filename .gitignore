@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# C# API
+*.csproj
+*.dll
+*.exe
+bin/
+obj/
