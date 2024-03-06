@@ -74,6 +74,7 @@ axios.interceptors.request.use(
  * @throws {Error} - If there is an error during login.
  */
 export async function login(credentials) {
+  console.log("credentials", credentials);
   try {
     const response = await axios.post(`${BASE_URL}/login`, credentials);
     const data = response.data;
@@ -90,10 +91,8 @@ export async function login(credentials) {
 
 export async function register(credentials) {
   try {
-    const response = await axios.post(`${BASE_URL}/register`, credentials);
+    const response = await axios.post(`${BASE_URL}/user/register`, credentials);
     const data = response.data;
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("refreshToken", data.refreshToken);
     return data;
   } catch (error) {
     handleError(error);

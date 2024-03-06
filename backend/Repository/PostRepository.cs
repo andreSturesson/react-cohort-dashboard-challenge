@@ -15,6 +15,7 @@ namespace backend.Repository
     }
     public async Task<Post> CreatePost(Post post, string accountId)
     {
+      post.Created = DateTime.UtcNow;
       post.Account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
       await _context.Posts.AddAsync(post);
       await _context.SaveChangesAsync();
@@ -64,6 +65,7 @@ namespace backend.Repository
       {
         postToUpdate.Title = post.Title;
         postToUpdate.Text = post.Text;
+        postToUpdate.LastModified = DateTime.UtcNow;
         await _context.SaveChangesAsync();
         return postToUpdate;
       }

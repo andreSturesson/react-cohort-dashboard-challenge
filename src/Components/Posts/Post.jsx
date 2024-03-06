@@ -1,4 +1,4 @@
-import { Avatar, Group, Text, Card, Space } from "@mantine/core";
+import { Avatar, Group, Text, Card, Space, Badge } from "@mantine/core";
 import { CommentList } from "./Comments/CommentList";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -22,7 +22,7 @@ export function Post({ post }) {
           </div>
         </Group>
         <Text pl={54} pt="sm" size="sm" ta={"left"}>
-          {post.content}
+          {post.text}
         </Text>
         <Space h={10} />
         <CommentList postId={post.id} />

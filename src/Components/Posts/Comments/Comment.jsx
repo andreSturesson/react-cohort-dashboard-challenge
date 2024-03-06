@@ -6,11 +6,20 @@ import {
   Space,
   Card,
   Loader,
+  Badge,
 } from "@mantine/core";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 export function Comment({ comment }) {
+  const created = new Date(comment.created);
+  const date =
+    created.getMonth() +
+    1 +
+    "/" +
+    created.getDate() +
+    "/" +
+    created.getFullYear();
   return (
     <Container size="sm" ml={0}>
       {comment.account ? (
@@ -29,7 +38,10 @@ export function Comment({ comment }) {
                   {comment.account.firstName} {comment.account.lastName}
                 </Text>
               </Link>
-              <Text size="sm" c="dimmed">
+              <Text size="xs" fz={15}>
+                {date}
+              </Text>
+              <Text size="lg" c="dimmed">
                 {comment.text}
               </Text>
             </Card>

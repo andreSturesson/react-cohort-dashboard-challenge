@@ -17,6 +17,7 @@ namespace backend.Repository
 
     public async Task<Comment> CreateComment(Comment comment)
     {
+      comment.Created = DateTime.UtcNow;
       _context.Comments.Add(comment);
       await _context.SaveChangesAsync();
       comment.Post = await _context.Posts
@@ -68,6 +69,7 @@ namespace backend.Repository
       if (commentToUpdate != null)
       {
         commentToUpdate.Text = comment.Text;
+        commentToUpdate.LastModified = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return commentToUpdate;
