@@ -1,48 +1,41 @@
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using backend.Model;
+using Microsoft.IdentityModel.Tokens;
 
 namespace backend.Repository
 {
-  public class AccountRepository : IAccountRepository
+  public class AccountRepository
   {
-    public Task<Freind> AddFriend(int id, Freind friend)
+    private readonly IConfiguration _configuration;
+    public AccountRepository(IConfiguration configuration)
     {
-      throw new NotImplementedException();
+      _configuration = configuration;
     }
 
-    public Task<Account> CreateAccount(Account account)
+    public string GenerateJwtToken()
     {
-      throw new NotImplementedException();
+      var tokenHandler = new JwtSecurityTokenHandler();
+      var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+
+      var tokenDescriptor = new SecurityTokenDescriptor
+      {
+        Expires = DateTime.UtcNow.AddDays(7),
+        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+      };
+      var token = tokenHandler.CreateToken(tokenDescriptor);
+      return tokenHandler.WriteToken(token);
     }
 
-    public Task<Account> DeleteAccount(string id)
+    public string GenerateRefreshToken()
     {
-      throw new NotImplementedException();
-    }
-
-    public Task<Account> GetAccount(string id)
-    {
-      throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Account>> GetAccounts()
-    {
-      throw new NotImplementedException();
-    }
-
-    public Task<Freind> GetFriend(int id)
-    {
-      throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Freind>> GetFriends(string id)
-    {
-      throw new NotImplementedException();
-    }
-
-    public Task<Account> UpdateAccount(Account account)
-    {
-      throw new NotImplementedException();
+      var randomNumber = new byte[32];
+      using var rng = RandomNumberGenerator.Create();
+      rng.GetBytes(randomNumber);
+      return Convert.ToBase64String(randomNumber);
     }
   }
 }

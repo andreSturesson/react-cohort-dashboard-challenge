@@ -8,7 +8,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { ExpandableForm } from "../ExpandableForm";
 
 export function AddPost() {
-  const [value, setValue] = useState("");
+  const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   const [opened, { toggle }] = useDisclosure(false);
   const [user] = useAtom(userAtom);
@@ -17,19 +17,16 @@ export function AddPost() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("title", title);
-    console.log("value", value);
-    console.log("Making a post...");
-    if (value === "") return;
+    if (text === "") return;
     if (opened && title === "") return;
 
     const newPost = await createPost({
       title: title,
-      text: value,
+      text: text,
     });
 
     refreshPosts();
-    setValue("");
+    setText("");
     setTitle("");
     toggle();
   };
@@ -43,8 +40,8 @@ export function AddPost() {
               handleSubmit={handleSubmit}
               opened={opened}
               toggle={toggle}
-              value={value}
-              setValue={setValue}
+              text={text}
+              setText={setText}
               title={title}
               setTitle={setTitle}
             />

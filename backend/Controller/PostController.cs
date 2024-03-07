@@ -21,6 +21,8 @@ namespace backend.Controller
       posts.MapPost("", CreatePost);
       posts.MapPut("/{postId}", UpdatePost);
       posts.MapDelete("/{postId}", DeletePost);
+      posts.MapPost("/{postId}/like", IncreaseLike);
+      posts.MapPost("/{postId}/dislike", IncreaseDislike);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -138,12 +140,40 @@ namespace backend.Controller
       return Results.NoContent();
     }
 
+    [Authorize]
+    public static async Task<IResult> IncreaseLike(IPostRepository repository, int postId)
+    {
+      var post = await repository.GetPost(postId);
+      if (post == null)
+      {
+        return Results.NotFound(new Error(Status.NotFound, "Post not found"));
+      }
+      post.Likes++;
+      var updatedPost = await repository.UpdatePost(post);
+      return TypedResults.Ok(new PostDTO(updatedPost));
+    }
+
+    [Authorize]
+    public static async Task<IResult> IncreaseDislike(IPostRepository repository, int postId)
+    {
+      var post = await repository.GetPost(postId);
+      if (post == null)
+      {
+        return Results.NotFound(new Error(Status.NotFound, "Post not found"));
+      }
+      post.Dislikes++;
+      var updatedPost = await repository.UpdatePost(post);
+      return TypedResults.Ok(new PostDTO(updatedPost));
+    }
+
     private static string GetAccountIdFromUser(IHttpContextAccessor httpContext)
     {
       var userId = httpContext.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
       Console.WriteLine(userId);
       return userId;
     }
+
+
 
   }
 }

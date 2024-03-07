@@ -10,7 +10,6 @@ export function CommentList({ postId }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Fetching comments for post", postId);
     setLoading(true);
     getComments(postId)
       .then((data) => {
@@ -51,11 +50,12 @@ export function CommentList({ postId }) {
               Load More Comments
             </Button>
           </Center>
-          <Space h={10} />
+          <Space h={20} />
         </>
       )}
+      <Space h={30} />
       <AddComment
-        postId={postId}
+        postId={postId.toString()}
         comments={comments}
         setComments={setComments}
       />

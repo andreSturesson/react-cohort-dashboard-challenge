@@ -9,6 +9,8 @@ namespace backend.Utilities.DTOs
     public int Id { get; set; }
     public string Title { get; set; } = null!;
     public string Text { get; set; } = null!;
+    public int Likes { get; set; }
+    public int Dislikes { get; set; }
     public AccountDTO Account { get; set; } = null!;
 
     public PostDTO(Post post)
@@ -16,6 +18,8 @@ namespace backend.Utilities.DTOs
       Id = post.Id;
       Title = post.Title;
       Text = post.Text;
+      Likes = post.Likes;
+      Dislikes = post.Dislikes;
       Account = new AccountDTO(post.Account);
     }
 

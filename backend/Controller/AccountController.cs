@@ -1,27 +1,32 @@
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using backend.Model;
+using backend.Repository;
 using backend.Utilities.Error;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace backend.Controller
 {
   public static class AccountController
   {
-
     public static void ConfigureAccountController(this WebApplication app)
     {
-      app.MapGroup("/accounts");
+      app.MapGroup("/user");
       app.MapPost("/user/register", Register);
       app.MapGet("/user", GetUser);
-      app.MapPost("/updateUser", UpdateUser);
+      app.MapPost("/user/updateUser", UpdateUser);
       app.MapGet("/user/{id}", GetUserById);
     }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public static async Task<IResult> Register([FromServices] UserManager<Account> userManager, RegisterPayload payload)
+    public static async Task<IResult> Register(AccountRepository repository, [FromServices] UserManager<Account> userManager, RegisterPayload payload)
     {
 
       if (string.IsNullOrEmpty(payload.Email))
@@ -40,7 +45,8 @@ namespace backend.Controller
         UserName = payload.Email,
         FirstName = payload.FirstName,
         LastName = payload.LastName,
-        ProfilePicture = payload.ProfilePicture
+        ProfilePicture = payload.ProfilePicture,
+        Created = DateTime.UtcNow,
       };
 
       var result = await userManager.CreateAsync(user, payload.Password);

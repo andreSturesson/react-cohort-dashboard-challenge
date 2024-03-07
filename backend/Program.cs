@@ -21,7 +21,7 @@ namespace NoteHarbor
                   builder =>
                   {
                     builder
-                          .WithOrigins("http://localhost:5173", "http://localhost:5111", "http://localhost:5223/user")
+                          .WithOrigins("http://localhost:5173", "http://localhost:5111", "http://localhost:5223")
                           .AllowAnyMethod()
                           .AllowAnyHeader()
                           .AllowCredentials();
@@ -45,7 +45,7 @@ namespace NoteHarbor
         options.OperationFilter<SecurityRequirementsOperationFilter>();
       });
       builder.Services.AddDbContext<PostContext>();
-      builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+      builder.Services.AddScoped<AccountRepository, AccountRepository>();
       builder.Services.AddScoped<IPostRepository, PostRepository>();
       builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 

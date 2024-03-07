@@ -10,6 +10,7 @@ import {
   Checkbox,
   Stack,
   Center,
+  Badge,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { userAtom, isLoggedInAtom } from "../../State/auth.state";
@@ -39,7 +40,11 @@ export function LoginModal({ close }) {
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       password: (value) =>
-        value.length >= 6 ? null : "Password should be at least 6 characters",
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/.test(
+          value
+        )
+          ? null
+          : "Password should have 8 characters, 1 capital letter, 1 special character, and 1 numeral",
     },
     validateInputOnChange: true,
   });
@@ -54,72 +59,49 @@ export function LoginModal({ close }) {
         lastName: form.values.lastName,
         profilePicture: form.values.profilePicture,
       };
+
       const response = await register(submit);
-      switch (response.status) {
-        case 400:
-          console.log("Invalid user data");
-          setError(response.data[0]);
-          break;
-        case 500:
-          console.log("Server error");
-          break;
-        case 200:
-          console.log("User registered");
-          await login({
-            email: form.values.email,
-            password: form.values.password,
-          });
-          const registeredUser = JSON.parse(localStorage.getItem("user"));
-          setUser(registeredUser);
-          setIsLoggedIn(true);
-          close();
-          navigate(`/profile/${registeredUser.id}`);
-          break;
-        default:
-          console.log("Unexpected response status:", response.status);
+      if (response.status === 200) {
+        await login({
+          email: form.values.email,
+          password: form.values.password,
+        });
+        const registeredUser = JSON.parse(localStorage.getItem("user"));
+        setUser(registeredUser);
+        setIsLoggedIn(true);
+        close();
+        navigate(`/profile/${registeredUser.id}`);
+      } else {
+        const { message } = response;
+        setError(message);
+        return;
       }
     } catch (error) {
       console.error("Error during registration:", error);
     }
   }
+
   async function handleLogin() {
-    console.log(form.values);
     try {
       const response = await login(form.values);
-      switch (response.status) {
-        case 401:
-          console.log("Invalid credentials");
-          break;
-        case 500:
-          console.log("Server error");
-          break;
-        case 200:
-          try {
-            console.log("Success");
-          } catch (error) {
-            console.log("Error parsing user data from localStorage:", error);
-          }
-          const loggedInUser = JSON.parse(localStorage.getItem("user"));
-          setUser(loggedInUser);
-          setIsLoggedIn(true);
-          close();
-          navigate(`/profile/${loggedInUser.id}`);
-          break;
-        default:
-          console.log("Unexpected response status:", response.status);
-          return;
+      console.log("Response:", response);
+      if (response.status === 200) {
+        const loggedInUser = JSON.parse(localStorage.getItem("user"));
+        setUser(loggedInUser);
+        setIsLoggedIn(true);
+        close();
+        navigate(`/profile/${loggedInUser.id}`);
+      } else {
+        const { message } = response;
+        setError(message);
+        return;
       }
     } catch (error) {
-      console.log("Error during login:", error);
-      return;
+      console.error("Error during login:", error);
     }
   }
 
   async function handleSubmit() {
-    console.log("form submitted");
-    console.log("form errors:", form.errors);
-    console.log("form values:", form.values);
-    console.log("type:", type);
     form.validate();
     if (type === "register") {
       console.log("Registering...");
@@ -151,18 +133,21 @@ export function LoginModal({ close }) {
           {type === "register" && (
             <>
               <TextInput
+                required
                 label="First Name"
                 placeholder="Your first name"
                 {...form.getInputProps("firstName")}
                 radius="md"
               />
               <TextInput
+                required
                 label="Last Name"
                 placeholder="Your last name"
                 {...form.getInputProps("lastName")}
                 radius="md"
               />
               <TextInput
+                required
                 label="Profile Picture"
                 placeholder="URL to a profile picture"
                 {...form.getInputProps("profilePicture")}
@@ -187,7 +172,7 @@ export function LoginModal({ close }) {
             {...form.getInputProps("password")}
             error={
               form.errors.password &&
-              "Password should include at least 6 characters"
+              "Password should have 8 characters, 1 capital letter, 1 special character, and 1 numeral"
             }
             radius="md"
           />
@@ -203,8 +188,11 @@ export function LoginModal({ close }) {
           )}
         </Stack>
 
-        <Divider label={error} labelPosition="center" my="lg" />
-
+        {error && (
+          <Center mt={15}>
+            <Badge color="red">{error}</Badge>
+          </Center>
+        )}
         <Group justify="space-between" mt="xl">
           <Anchor
             component="button"

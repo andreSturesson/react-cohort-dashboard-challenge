@@ -1,12 +1,22 @@
-import { AppShell, Group, Burger, Button, Avatar, Modal } from "@mantine/core";
+import {
+  AppShell,
+  Group,
+  Burger,
+  Button,
+  Avatar,
+  Modal,
+  Container,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { userAtom, isLoggedInAtom } from "../State/auth.state";
 import { useAtom } from "jotai";
 import { LoginModal } from "./Login/LoginModal";
-import { IconLogin } from "@tabler/icons-react";
+import { IconLogin, IconMoonFilled, IconMoon } from "@tabler/icons-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { themeAtom } from "../State/theme.state";
 export function Header({ opened, toggle }) {
+  const [theme, setTheme] = useAtom(themeAtom);
   const [user] = useAtom(userAtom);
   const [isLoggedIn] = useAtom(isLoggedInAtom);
   const [openedModal, { open, close }] = useDisclosure(false);
@@ -36,10 +46,19 @@ export function Header({ opened, toggle }) {
             />
           </svg>
         </Group>
-        <Group align="left" justify="flex-end">
+        <Group justify="flex-end">
+          {theme == "dark" ? (
+            <Button variant="transparent" onClick={() => setTheme("light")}>
+              <IconMoonFilled />
+            </Button>
+          ) : (
+            <Button variant="transparent" onClick={() => setTheme("dark")}>
+              <IconMoon />
+            </Button>
+          )}
           {isLoggedIn ? (
             <Link to={`/profile/${user.id}`}>
-              <Avatar src={user.profileImage} alt="Profile" />
+              <Avatar src={user.profilePicture} alt="Profile" />
             </Link>
           ) : (
             <Button onClick={open}>

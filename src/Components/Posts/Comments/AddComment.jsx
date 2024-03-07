@@ -24,7 +24,6 @@ export function AddComment({ postId, comments, setComments }) {
       };
 
       const data = await createComment(comment, postId);
-      console.log(data);
       setComments(comments.concat(data));
       setCommentText("");
     } catch (error) {
@@ -41,7 +40,7 @@ export function AddComment({ postId, comments, setComments }) {
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
         rightSectionWidth={42}
-        leftSection={<Avatar src={user.profileImage} alt="Profile Image" />}
+        leftSection={<Avatar src={user.profilePicture} alt="Profile Image" />}
         rightSection={
           <ActionIcon size={32} radius="xl" variant="filled" type="submit">
             <IconArrowRight
